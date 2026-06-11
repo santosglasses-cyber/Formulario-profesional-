@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto de Vidrios – Cristalería PRO</title>
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --accent: #00b4d8;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d2137 100%);
+            color: white;
+            padding: 28px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .app-header::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -40px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .app-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+        .app-header .subtitle {
+            font-size: 0.88rem;
+            opacity: 0.8;
+            font-weight: 400;
+            margin-top: 4px;
+            position: relative;
+            z-index: 1;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Progress */
+        .progress-bar {
+            display: flex;
+            gap: 0;
+            padding: 0 32px;
+            background: #fafbfc;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 14px 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-light);
+            position: relative;
+            cursor: default;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+        .progress-step.active {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .progress-step.done {
+            color: var(--success);
+        }
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: transparent;
+            border-radius: 3px 3px 0 0;
+            transition: var(--transition);
+        }
+        .progress-step.active::after {
+            background: var(--primary);
+        }
+        .progress-step.done::after {
+            background: var(--success);
+        }
+
+        /* Main form area */
+        .form-body {
+            padding: 28px 32px 20px;
+            min-height: 420px;
+        }
+        .step-panel {
+            display: none;
+            animation: fadeSlideIn 0.35s ease;
+        }
+        .step-panel.active {
+            display: block;
+        }
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-panel h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .step-panel .step-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+        .label-hint {
+            font-weight: 400;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        select,
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: #fafbfc;
+            color: var(--text);
+        }
+        select:focus,
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.08);
+            background: #fff;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .radio-card,
+        .checkbox-card {
+            flex: 1 1 calc(33% - 10px);
+            min-width: 130px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #fafbfc;
+            font-size: 0.85rem;
+            font-weight: 500;
+            user-select: none;
+            position: relative;
+        }
+        .radio-card:hover,
+        .checkbox-card:hover {
+            border-color: var(--accent);
+            background: #f0f9ff;
+        }
+        .radio-card input,
+        .checkbox-card input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .radio-card.selected,
+        .checkbox-card.selected {
+            border-color: var(--primary);
+            background: #e8f0fe;
+            color: var(--primary);
+            font-weight: 700;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.06);
+        }
+        .radio-card .icon,
+        .checkbox-card .icon {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        /* File upload */
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #fafbfc;
+            position: relative;
+        }
+        .file-upload-area:hover {
+            border-color: var(--accent);
+            background: #f0f9ff;
+        }
+        .file-upload-area .upload-icon {
+            font-size: 2.2rem;
+            margin-bottom: 6px;
+        }
+        .file-upload-area .upload-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .file-upload-area .upload-hint {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+        .file-upload-area input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-name {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 20px 32px;
+            background: #fafbfc;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 11px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            font-family: inherit;
+            letter-spacing: -0.2px;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 14px rgba(26, 115, 232, 0.3);
+        }
+        .btn-outline {
+            background: white;
+            border: 1.5px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover {
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Glass type cards */
+        .glass-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+        }
+        .glass-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            background: #fafbfc;
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+        .glass-card:hover {
+            border-color: var(--accent);
+            background: #f0f9ff;
+        }
+        .glass-card.selected {
+            border-color: var(--primary);
+            background: #e8f0fe;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.06);
+        }
+
+        /* Summary */
+        .summary-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        .summary-box h3 {
+            color: #065f46;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .summary-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-box li {
+            padding: 4px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed #d1fae5;
+        }
+        .summary-box li:last-child {
+            border-bottom: none;
+        }
+        .summary-box strong {
+            color: #065f46;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1f2937;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 999;
+            animation: slideInRight 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+        @keyframes slideInRight {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .required-star {
+            color: var(--danger);
+        }
+
+        @media (max-width: 600px) {
+            .app-header {
+                padding: 20px 16px;
+            }
+            .form-body {
+                padding: 20px 16px;
+            }
+            .btn-row {
+                padding: 16px;
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            .glass-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <div class="app-header">
+            <h1>🪟 Presupuesto Inteligente de Vidrios</h1>
+            <p class="subtitle">Cristalería PRO – Asesoramiento personalizado</p>
+            <span class="badge">💎 Desde 1985</span>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-step active" data-step="1">🧭 Modo</div>
+            <div class="progress-step" data-step="2">📐 Uso</div>
+            <div class="progress-step" data-step="3">📏 Medidas</div>
+            <div class="progress-step" data-step="4">🔧 Manufactura</div>
+            <div class="progress-step" data-step="5">🪞 Vidrio</div>
+            <div class="progress-step" data-step="6">👤 Datos</div>
+            <div class="progress-step" data-step="7">✅ Resumen</div>
+        </div>
+
+        <!-- FORM BODY -->
+        <form id="glassForm" class="form-body" novalidate>
+            <!-- STEP 1: Modo -->
+            <div class="step-panel active" data-step="1">
+                <h2>¿Cómo quieres proceder?</h2>
+                <p class="step-desc">Elige la experiencia que mejor se adapte a ti.</p>
+                <div class="radio-group" id="modoGroup">
+                    <label class="radio-card selected" data-value="experto">
+                        <span class="icon">⚡</span> Sé lo que necesito<br><small>Formulario rápido</small>
+                        <input type="radio" name="modo" value="experto" checked hidden>
+                    </label>
+                    <label class="radio-card" data-value="asesorado">
+                        <span class="icon">🤝</span> Necesito asesoramiento<br><small>Paso a paso guiado</small>
+                        <input type="radio" name="modo" value="asesorado" hidden>
+                    </label>
+                </div>
+            </div>
+
+            <!-- STEP 2: Uso del vidrio -->
+            <div class="step-panel" data-step="2">
+                <h2>¿Para qué necesitas el vidrio?</h2>
+                <p class="step-desc">Esto nos ayudará a recomendarte el tipo ideal.</p>
+                <div class="form-group">
+                    <select id="usoVidrio" name="usoVidrio">
+                        <option value="">-- Selecciona un uso --</option>
+                        <option value="mesa">🪑 Mesa / Sobremesa</option>
+                        <option value="ventana_exterior">🪟 Ventana exterior</option>
+                        <option value="ventana_interior">🏠 Ventana interior / tabique</option>
+                        <option value="estanteria">📚 Estantería / Balda</option>
+                        <option value="mampara">🚿 Mampara de baño</option>
+                        <option value="barandilla">🏗️ Barandilla / Escalera</option>
+                        <option value="chimenea">🔥 Cristal para chimenea (Neoceram)</option>
+                        <option value="cuadro">🖼️ Cristal para cuadro / marco</option>
+                        <option value="transitable">🚶 Cristal transitable / Suelo</option>
+                        <option value="doble_acristalamiento">🪟 Doble acristalamiento / Climalit</option>
+                        <option value="decorativo">🎨 Decorativo / Lacado</option>
+                        <option value="espejo">🪞 Espejo</option>
+                        <option value="cocina">🍳 Encimera / Trasera de cocina</option>
+                        <option value="escaparate">🏬 Escaparate comercial</option>
+                        <option value="otro">❓ Otro (especificar)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="otroUsoGroup" style="display:none;">
+                    <label for="otroUso">Especifica el uso:</label>
+                    <input type="text" id="otroUso" name="otroUso" placeholder="Describe brevemente...">
+                </div>
+            </div>
+
+            <!-- STEP 3: Medidas -->
+            <div class="step-panel" data-step="3">
+                <h2>Medidas del vidrio</h2>
+                <p class="step-desc">Indica las dimensiones o sube un plano/foto.</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label>Ancho (mm) <span class="required-star">*</span></label>
+                        <input type="number" id="ancho" name="ancho" placeholder="Ej: 800" min="10" max="6000">
+                    </div>
+                    <div class="form-group">
+                        <label>Alto (mm) <span class="required-star">*</span></label>
+                        <input type="number" id="alto" name="alto" placeholder="Ej: 600" min="10" max="6000">
+                    </div>
+                    <div class="form-group">
+                        <label>Grosor (mm)</label>
+                        <input type="number" id="grosor" name="grosor" placeholder="Ej: 6" min="2" max="30">
+                        <span class="label-hint">Si no lo sabes, lo sugerimos</span>
+                    </div>
+                </div>
+                <div class="checkbox-group" style="margin-bottom:12px;">
+                    <label class="checkbox-card" id="noMedidasCard">
+                        <span class="icon">📐</span> No tengo medidas<br><small>Necesito toma de medidas</small>
+                        <input type="checkbox" id="noMedidas" name="noMedidas" hidden>
+                    </label>
+                </div>
+                <div class="file-upload-area" id="fileUploadArea">
+                    <span class="upload-icon">📎</span>
+                    <p class="upload-text">Adjunta plano, croquis o foto</p>
+                    <p class="upload-hint">PDF, JPG, PNG – Máx 10 MB</p>
+                    <input type="file" id="archivo" name="archivo" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div class="file-name" id="fileNameDisplay"></div>
+            </div>
+
+            <!-- STEP 4: Manufactura -->
+            <div class="step-panel" data-step="4">
+                <h2>Opciones de manufactura</h2>
+                <p class="step-desc">Selecciona los acabados que necesitas.</p>
+                <div class="form-group">
+                    <label>Tipo de canto</label>
+                    <select id="canto" name="canto">
+                        <option value="plano">Plano (estándar)</option>
+                        <option value="pulido">Pulido brillante</option>
+                        <option value="biselado">Biselado</option>
+                        <option value="canteado">Canteado especial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Taladros</label>
+                    <select id="taladros" name="taladros">
+                        <option value="0">Ninguno</option>
+                        <option value="1">1 taladro</option>
+                        <option value="2">2 taladros</option>
+                        <option value="3">3 taladros</option>
+                        <option value="4">4 o más</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Muescas / Cajas</label>
+                    <select id="muescas" name="muescas">
+                        <option value="ninguna">Ninguna</option>
+                        <option value="esquinas">En esquinas</option>
+                        <option value="centrales">Centrales</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Bisel decorativo (mm)</label>
+                    <input type="number" id="bisel" name="bisel" placeholder="Ancho en mm (0 = sin bisel)" min="0" max="100"
+                    value="0">
+                </div>
+                <div class="form-group">
+                    <label for="otrosManufactura">Otras especificaciones</label>
+                    <textarea id="otrosManufactura" name="otrosManufactura" placeholder="Grabados, serigrafía, texto personalizado..."></textarea>
+                </div>
+            </div>
+
+            <!-- STEP 5: Tipo de vidrio -->
+            <div class="step-panel" data-step="5">
+                <h2>Selecciona el tipo de vidrio</h2>
+                <p class="step-desc">Te mostramos las opciones recomendadas según tu uso. <strong>Puedes elegir varias.</strong></p>
+                <div class="glass-cards" id="glassCards">
+                    <!-- Se llenan dinámicamente -->
+                </div>
+                <div class="form-group" style="margin-top:16px;">
+                    <label for="colorLacado">Color si es lacado (RAL)</label>
+                    <input type="text" id="colorLacado" name="colorLacado" placeholder="Ej: RAL 9016 Blanco tráfico">
+                </div>
+            </div>
+
+            <!-- STEP 6: Datos del cliente -->
+            <div class="step-panel" data-step="6">
+                <h2>Tus datos para el presupuesto</h2>
+                <p class="step-desc">Con esta información creamos tu ficha y te enviamos el presupuesto.</p>
+                <div class="form-group">
+                    <label for="nombre">Nombre y apellidos / Empresa <span class="required-star">*</span></label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan García o Cristalería SL" required>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label for="email">Email <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="cliente@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono <span class="required-star">*</span></label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección de entrega</label>
+                    <input type="text" id="direccion" name="direccion" placeholder="Calle, número, ciudad...">
+                </div>
+                <div class="form-group">
+                    <label for="codigoPostal">Código postal</label>
+                    <input type="text" id="codigoPostal" name="codigoPostal" placeholder="28001">
+                </div>
+                <div class="radio-group">
+                    <label class="radio-card selected" data-value="particular">
+                        <span class="icon">🏠</span> Particular
+                        <input type="radio" name="tipoCliente" value="particular" checked hidden>
+                    </label>
+                    <label class="radio-card" data-value="profesional">
+                        <span class="icon">🏢</span> Profesional / Empresa
+                        <input type="radio" name="tipoCliente" value="profesional" hidden>
+                    </label>
+                </div>
+                <div class="form-group" style="margin-top:14px;">
+                    <label for="urgencia">Nivel de urgencia</label>
+                    <select id="urgencia" name="urgencia">
+                        <option value="solo_presupuesto">📋 Solo quiero presupuesto, sin prisa</option>
+                        <option value="1_3_meses">📅 En 1-3 meses</option>
+                        <option value="1_3_semanas">⏳ En 1-3 semanas</option>
+                        <option value="urgente">🚨 Lo antes posible (URGENTE)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- STEP 7: Resumen -->
+            <div class="step-panel" data-step="7">
+                <h2>✅ Resumen de tu solicitud</h2>
+                <p class="step-desc">Revisa los datos antes de enviar. Tu solicitud quedará <strong>pendiente de aprobación</strong>.</p>
+                <div class="summary-box" id="summaryBox">
+                    <p style="color:#6b7280; font-style:italic;">Cargando resumen...</p>
+                </div>
+                <p style="margin-top:12px; font-size:0.85rem; color:var(--text-light);">
+                    ⚡ Al enviar, crearemos tu ficha en nuestra base de datos. Recibirás un email de confirmación.
+                </p>
+            </div>
+        </form>
+
+        <!-- BUTTONS -->
+        <div class="btn-row" id="btnRow">
+            <button type="button" class="btn btn-outline" id="btnPrev" disabled>⬅ Anterior</button>
+            <button type="button" class="btn btn-primary" id="btnNext">Siguiente ➡</button>
+            <button type="button" class="btn btn-success" id="btnSubmit" style="display:none;">📩 Enviar Solicitud</button>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toastContainer"></div>
+
+    <script>
+        (function() {
+            // --- STATE ---
+            let currentStep = 1;
+            const totalSteps = 7;
+            const selectedGlassTypes = new Set();
+            const formData = {};
+
+            // --- DOM refs ---
+            const panels = document.querySelectorAll('.step-panel');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const form = document.getElementById('glassForm');
+            const glassCardsContainer = document.getElementById('glassCards');
+            const summaryBox = document.getElementById('summaryBox');
+
+            // --- Glass type definitions ---
+            const allGlassTypes = [
+                { id: 'float_incoloro', name: 'Float Incoloro', desc: 'Estándar, económico', icon: '🪟' },
+                { id: 'extra_clear', name: 'Extra Clear / Optiwhite', desc: 'Alta transparencia', icon: '✨' },
+                { id: 'laminado', name: 'Laminado de seguridad', desc: '6+6, 8+8, etc.', icon: '🛡️' },
+                { id: 'templado', name: 'Templado / Securit', desc: 'Alta resistencia', icon: '💪' },
+                { id: 'lacado', name: 'Lacado / Pintado', desc: 'Color RAL a elegir', icon: '🎨' },
+                { id: 'espejo_plata', name: 'Espejo Plata', desc: 'Espejo clásico', icon: '🪞' },
+                { id: 'espejo_bronce', name: 'Espejo Bronce / Antiguo', desc: 'Tono cálido', icon: '🟤' },
+                { id: 'impreso', name: 'Impreso / Decorativo', desc: 'Texturas y dibujos', icon: '🌿' },
+                { id: 'neoceram', name: 'Neoceram (Chimenea)', desc: 'Alta temperatura 800°C', icon: '🔥' },
+                { id: 'climalit', name: 'Climalit / Doble acristalam.', desc: 'Aislamiento térmico', icon: '🪟' },
+                { id: 'bajo_emisivo', name: 'Bajo Emisivo', desc: 'Control solar', icon: '☀️' },
+                { id: 'transitable', name: 'Transitable / Suelo', desc: 'Alta carga, antideslizante', icon: '🚶' },
+                { id: 'cuadro_antireflejo', name: 'Antirreflejo para cuadro', desc: 'Museo, protección UV', icon: '🖼️' },
+                { id: 'cuadro_normal', name: 'Float para cuadro', desc: 'Económico 2-3mm', icon: '🖼️' },
+                { id: 'blindado', name: 'Blindado / Seguridad', desc: 'Antibalas, alta seguridad', icon: '🔒' },
+                { id: 'autolimpiable', name: 'Autolimpiable', desc: 'Fácil mantenimiento', icon: '💧' },
+                { id: 'mateado', name: 'Mateado / Ácido', desc: 'Translúcido sin transparencia', icon: '🌫️' },
+            ];
+
+            // Recommendations per use
+            const recommendations = {
+                'mesa': ['float_incoloro', 'extra_clear', 'lacado', 'templado'],
+                'ventana_exterior': ['climalit', 'laminado', 'bajo_emisivo', 'autolimpiable'],
+                'ventana_interior': ['float_incoloro', 'impreso', 'mateado'],
+                'estanteria': ['float_incoloro', 'extra_clear', 'templado'],
+                'mampara': ['templado', 'lacado', 'impreso', 'mateado'],
+                'barandilla': ['laminado', 'templado', 'blindado'],
+                'chimenea': ['neoceram', 'templado'],
+                'cuadro': ['cuadro_normal', 'cuadro_antireflejo', 'extra_clear'],
+                'transitable': ['transitable', 'laminado', 'templado'],
+                'doble_acristalamiento': ['climalit', 'bajo_emisivo', 'laminado'],
+                'decorativo': ['lacado', 'espejo_plata', 'espejo_bronce', 'impreso', 'mateado'],
+                'espejo': ['espejo_plata', 'espejo_bronce'],
+                'cocina': ['templado', 'lacado', 'extra_clear'],
+                'escaparate': ['laminado', 'templado', 'blindado'],
+                'otro': []
+            };
+
+            // --- Functions ---
+            function updateProgress() {
+                progressSteps.forEach(step => {
+                    const s = parseInt(step.dataset.step);
+                    step.classList.remove('active', 'done');
+                    if (s === currentStep) step.classList.add('active');
+                    if (s < currentStep) step.classList.add('done');
+                });
+                btnPrev.disabled = currentStep === 1;
+                if (currentStep === totalSteps) {
+                    btnNext.style.display = 'none';
+                    btnSubmit.style.display = 'inline-block';
+                } else {
+                    btnNext.style.display = 'inline-block';
+                    btnSubmit.style.display = 'none';
+                }
+            }
+
+            function showStep(n) {
+                panels.forEach(p => p.classList.remove('active'));
+                const panel = document.querySelector(`.step-panel[data-step="${n}"]`);
+                if (panel) panel.classList.add('active');
+                updateProgress();
+                if (n === 5) renderGlassCards();
+                if (n === 7) renderSummary();
+            }
+
+            function nextStep() {
+                if (!validateStep(currentStep)) return;
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            }
+
+            function prevStep() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            }
+
+            function validateStep(step) {
+                if (step === 3) {
+                    const noMedidas = document.getElementById('noMedidas').checked;
+                    if (!noMedidas) {
+                        const ancho = document.getElementById('ancho').value;
+                        const alto = document.getElementById('alto').value;
+                        if (!ancho || !alto) {
+                            showToast('⚠️ Por favor indica al menos el ancho y el alto, o marca "No tengo medidas".');
+                            return false;
+                        }
+                    }
+                }
+                if (step === 6) {
+                    const nombre = document.getElementById('nombre').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const telefono = document.getElementById('telefono').value.trim();
+                    if (!nombre || !email || !telefono) {
+                        showToast('⚠️ Nombre, email y teléfono son obligatorios.');
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function renderGlassCards() {
+                const uso = document.getElementById('usoVidrio').value;
+                let recIds = recommendations[uso] || [];
+                if (uso === 'otro' || recIds.length === 
